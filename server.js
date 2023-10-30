@@ -1,9 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
-const app = express()
 const morgan = require('morgan');
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
+
+const app = express()
 
 const router = require('./src/routers/routers')
 
@@ -14,6 +16,7 @@ const apiUrl = process.env.API_URL
 app.use(cors())
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(cookieParser())
 
 
 app.use(`${apiUrl}/`, router)
