@@ -9,6 +9,19 @@ const createUser = async (req, res) => {
 
     try {
 
+        const userExists = await User.findOne({ username })
+        if (userExists) {
+            return res.status(400).json({
+                message: 'Nombre de usuario ya registrado.'
+            })
+        };
+
+        if (password.length < 4){
+            return res.status(400).json({
+                message: 'contraseña debe ser mayor a 4 carácteres.'
+            })
+        }
+
         const passwordHash = await bcrypt.hash(password, 10)
 
         const user = await new User({
@@ -54,6 +67,8 @@ const login = async (req, res) => {
 
     //user va a hacer login con email y password
     const { email, password } = req.body
+
+    if (email )
 
     try {
         const userFound = await User.findOne({ email })
