@@ -13,7 +13,12 @@ const PORT = process.env.PORT
 const MONGO_URI = process.env.MONGO_URI
 const apiUrl = process.env.API_URL
 
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true
+}
+
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(morgan('tiny'));
 app.use(cookieParser())

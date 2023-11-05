@@ -10,11 +10,18 @@ const createUser = async (req, res) => {
     try {
 
         const userExists = await User.findOne({ username })
+        const emailExists = await User.findOne({ email })
         if (userExists) {
             return res.status(400).json({
                 message: 'Nombre de usuario ya registrado.'
             })
         };
+
+        if (emailExists) {
+            return res.status(400).json({
+                message: 'Email ya registrado.'
+            })
+        }
 
         if (password.length < 4){
             return res.status(400).json({
@@ -118,6 +125,8 @@ const logout = async (req, res) => {
 }
 
 const profile = async (req, res) => {
+
+    console.log(req.userData)
     try {
         const userFound = await User.findById(req.userData.id)
 
@@ -131,7 +140,7 @@ const profile = async (req, res) => {
             username: userFound.username,
             nombre: userFound.firstName,
             apellido: userFound.lastName,
-            email: userFound.message
+            email: userFound.email
         })
 
     } catch (error) {
@@ -156,6 +165,7 @@ const getUsers = async (req, res) => {
         })
     }
 }
+
 const getUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
@@ -174,22 +184,24 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
 
     //campos que puede actualizar 
-    const { firstName, lastName, email, password } = req.body
+    const { firstName, lastName, email } = req.body
 
 try {
+
+    if (firstName === "" || lastName === "" || email === ""){
+        return res.status(400).json({
+            message: 'Campo no puede estar vacío.'
+        })
+    }
 
     if(!mongoose.isValidObjectId(req.params.id)){
         return res.status(400).send({
             message: 'invalid user ID, cannot edit user'
         })
     }
-
-    //necesario que envie password para update user... 
-    const hashPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.findByIdAndUpdate(req.params.id, {firstName, lastName, email, password: hashPassword }, {new: true} )
+    const user = await User.findByIdAndUpdate(req.params.id, {firstName, lastName, email }, {new: true} )
     res.status(200).send({
-        message: 'Product successfully updated',
+        message: 'User successfully updated',
         detail: user
     })
 
@@ -199,6 +211,74 @@ try {
         detail: error.message
     })
 }
+}
+
+const updateUserEmail = async (req, res) => {
+
+    const { email } = req.body
+
+    try {
+
+        const emailExists = await User.findOne({ email })
+        const emailRegEx = (/^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/g.test(email))
+
+        if (emailExists) {
+            return res.status(400).json({
+                message: "Email ya registrado."
+            })
+        }
+
+        if (!emailRegEx){
+            return res.status(400).json({
+                message: "formato de email no válido."
+            })
+        }
+
+        const newEmail = await User.findByIdAndUpdate(req.params.id, { email }, {new: true});
+        res.status(200).send({
+            message: 'email actualizado con exito.',
+            detail: newEmail
+        })
+        
+    } catch (error) {
+        return res.json({
+            message: 'error updating email',
+            detail: error.message
+        })
+    }
+}
+
+const updateUserPassword = async (req, res) => {
+    const { password } = req.body;
+
+    try {
+
+        if (password.length < 4){
+            return res.status(400).json({
+                message: 'contraseña debe ser mayor a 4 carácteres.'
+            })
+        }
+        
+        if (!mongoose.isValidObjectId(req.params.id)) {
+            return res.status(400).send({
+                message: 'invalid user ID, cannot update password'
+            })
+        }
+
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        const userPassword = await User.findByIdAndUpdate(req.params.id, {password: hashPassword}, {new: true})
+        res.status(200).send({
+            message: 'password updated successfully',
+            detail: userPassword
+        })
+
+    } catch (error) {
+        return res.json({
+            message: 'Error at passUpdate',
+            detail: error.message
+        })
+    }
 }
 
 const deleteUser = async (req, res) => {
@@ -221,4 +301,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = {getUsers, getUser, createUser, updateUser, deleteUser, login, logout, profile}
+module.exports = {getUsers, getUser, createUser, updateUser, deleteUser, login, logout, profile, updateUserPassword, updateUserEmail}
