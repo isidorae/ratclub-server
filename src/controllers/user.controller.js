@@ -52,7 +52,11 @@ const createUser = async (req, res) => {
                     detail: {
                         _id: newUser._id,
                         username: newUser.username,
-                        email: newUser.email
+                        email: newUser.email,
+                        firstName: newUser.firstName,
+                        lastName: newUser.lastName,
+                        token: token
+
                     }
                 }
             )
@@ -100,7 +104,9 @@ const login = async (req, res) => {
             detail: {
                 id: userFound._id,
                 username: userFound.username,
-                email: userFound.email
+                email: userFound.email,
+                firstName: userFound.firstName,
+                lastName: userFound.lastName
             }
         })
     } catch (error) {
