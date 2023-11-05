@@ -53,8 +53,8 @@ const createUser = async (req, res) => {
                         _id: newUser._id,
                         username: newUser.username,
                         email: newUser.email,
-                        firstName: newUser.firstName,
-                        lastName: newUser.lastName,
+                        nombre: newUser.firstName,
+                        apellido: newUser.lastName,
                         token: token
 
                     }
@@ -105,8 +105,9 @@ const login = async (req, res) => {
                 id: userFound._id,
                 username: userFound.username,
                 email: userFound.email,
-                firstName: userFound.firstName,
-                lastName: userFound.lastName
+                nombre: userFound.firstName,
+                apellido: userFound.lastName,
+                token: token
             }
         })
     } catch (error) {
