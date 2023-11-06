@@ -44,17 +44,17 @@ const createUser = async (req, res) => {
 
         //*****TOKEN */
         const token = await createAccessToken({id: newUser._id})
-        res.cookie('token', token)
+        // res.cookie('token', token)
         if (newUser) {
             return res.json(
                 {
                     message: "user created succesfully",
                     detail: {
-                        _id: newUser._id,
+                        id: newUser._id,
                         username: newUser.username,
                         email: newUser.email,
-                        nombre: newUser.firstName,
-                        apellido: newUser.lastName,
+                        firstName: newUser.firstName,
+                        lastName: newUser.lastName,
                         token: token
 
                     }
@@ -98,15 +98,15 @@ const login = async (req, res) => {
         }
 
         const token = await createAccessToken({id: userFound._id})
-        res.cookie('token', token)
+        // res.cookie('token', token)
         return res.json({
             message: `${userFound.username} ha hecho login con exito`,
             detail: {
                 id: userFound._id,
                 username: userFound.username,
                 email: userFound.email,
-                nombre: userFound.firstName,
-                apellido: userFound.lastName,
+                firstName: userFound.firstName,
+                lastName: userFound.lastName,
                 token: token
             }
         })
@@ -126,33 +126,6 @@ const logout = async (req, res) => {
     } catch (error) {
         return res.json({
             message: "error in logout",
-            detail: error.message
-        })
-    }
-}
-
-const profile = async (req, res) => {
-
-    console.log(req.userData)
-    try {
-        const userFound = await User.findById(req.userData.id)
-
-        if(!userFound){
-            return res.json(401).json({
-                message: 'user not found.'
-            })
-        }
-        return res.json({
-            id: userFound._id,
-            username: userFound.username,
-            nombre: userFound.firstName,
-            apellido: userFound.lastName,
-            email: userFound.email
-        })
-
-    } catch (error) {
-        return res.json({
-            message: 'error in profile',
             detail: error.message
         })
     }
@@ -179,7 +152,14 @@ const getUser = async (req, res) => {
         if (!req.body) {
             return res.status(404).res.json({message: 'user not found'})
         }
-        return res.status(200).send(user)
+        return res.status(200).send({
+            id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+
+        })
     } catch (error) {
         return res.json({
             message: "error on getUser",
@@ -191,11 +171,11 @@ const getUser = async (req, res) => {
 const updateUser = async (req, res) => {
 
     //campos que puede actualizar 
-    const { firstName, lastName, email } = req.body
+    const { firstName, lastName } = req.body
 
 try {
 
-    if (firstName === "" || lastName === "" || email === ""){
+    if (firstName === "" || lastName === "" ){
         return res.status(400).json({
             message: 'Campo no puede estar vacío.'
         })
@@ -206,10 +186,16 @@ try {
             message: 'invalid user ID, cannot edit user'
         })
     }
-    const user = await User.findByIdAndUpdate(req.params.id, {firstName, lastName, email }, {new: true} )
+    const user = await User.findByIdAndUpdate(req.params.id, {firstName, lastName }, {new: true} )
     res.status(200).send({
         message: 'User successfully updated',
-        detail: user
+        detail: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName
+        }
     })
 
 } catch (error) {
@@ -241,10 +227,16 @@ const updateUserEmail = async (req, res) => {
             })
         }
 
-        const newEmail = await User.findByIdAndUpdate(req.params.id, { email }, {new: true});
+        const user = await User.findByIdAndUpdate(req.params.id, { email }, {new: true});
         res.status(200).send({
             message: 'email actualizado con exito.',
-            detail: newEmail
+            detail: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName
+            }
         })
         
     } catch (error) {
@@ -254,7 +246,6 @@ const updateUserEmail = async (req, res) => {
         })
     }
 }
-
 const updateUserPassword = async (req, res) => {
     const { password } = req.body;
 
@@ -308,4 +299,4 @@ const deleteUser = async (req, res) => {
     }
 }
 
-module.exports = {getUsers, getUser, createUser, updateUser, deleteUser, login, logout, profile, updateUserPassword, updateUserEmail}
+module.exports = {getUsers, getUser, createUser, updateUser, deleteUser, login, logout, updateUserPassword, updateUserEmail}

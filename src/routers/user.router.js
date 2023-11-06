@@ -6,24 +6,24 @@ const {
     createUser,
     login,
     logout,
-    profile,
     updateUser,
     deleteUser,
     updateUserPassword,
     updateUserEmail
 }
     = require('../controllers/user.controller')
-const validateToken = require('../middlewares/validateToken')
+// const validateToken = require('../middlewares/validateToken')
+const auth = require ('../middlewares/validateToken')
 
 router.post('/register', createUser);
 router.post('/login', login);
 router.post('/logout', logout)
-router.get('/profile', validateToken, profile)
-router.get('/', validateToken, getUsers);
-router.get('/:id', getUser);
-router.put('/:id', validateToken, updateUser);
-router.put('/pass/:id', validateToken, updateUserPassword);
-router.put('/email/:id', validateToken, updateUserEmail )
+// router.get('/profile', auth, profile)
+router.get('/', auth, getUsers);
+router.get('/:id', auth, getUser);
+router.put('/:id', auth, updateUser);
+router.put('/pass/:id', auth, updateUserPassword);
+router.put('/email/:id', auth, updateUserEmail )
 router.delete('/:id', deleteUser)
 
 module.exports = router;
