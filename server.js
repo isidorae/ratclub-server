@@ -14,7 +14,8 @@ const MONGO_URI = process.env.MONGO_URI
 const apiUrl = process.env.API_URL
 
 const corsOptions = {
-    origin: 'https://ratclub.onrender.com/rat-club-api/v1',
+    // origin: 'http://localhost:5173',
+    origin: 'https://isidorae.github.io/rat-club-store',
     credentials: true
 }
 
