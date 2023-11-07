@@ -10,6 +10,7 @@ const getToken = (req) => {
     }
 }
 
+//token validation
 const auth = jwt.expressjwt(
     {
         secret: SECRET,

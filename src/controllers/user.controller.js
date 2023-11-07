@@ -132,6 +132,7 @@ const logout = async (req, res) => {
 }
 
 const getUsers = async (req, res) => {
+
     try {
         const users = await User.find();
         if (users.length === 0) {
