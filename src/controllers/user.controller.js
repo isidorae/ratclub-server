@@ -79,7 +79,7 @@ const login = async (req, res) => {
     //user va a hacer login con email y password
     const { email, password } = req.body
 
-    if (email )
+    // if (email )
 
     try {
         const userFound = await User.findOne({ email })

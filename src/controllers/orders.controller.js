@@ -3,22 +3,43 @@ const Order = require('../models/orders.model')
 
 const createOrder = async (req, res) => {
 
-    const { items, total, userId, receiver, address, extra } = req.body
+    const { items, total, userId, receiver, region, address, extra } = req.body
 
     try {
+
+        if (items === "" || total === "") {
+            return res.status(400).json({
+                message: 'Sin items en carrito..'
+            })
+        }
+
+        if (region === "") {
+            return res.status(400).json({
+                message: 'Debes seleccionar una región.'
+            })
+        }
+
+        if (receiver.length < 3 || address.length < 3) {
+                return res.status(400).json({
+                    message: 'Debes rellenar todos los campos obligatorios.'
+                })
+        }
 
         const newOrder = new Order({
             items,
             total,
             userId,
+            region,
             receiver,
             address,
             extra
         });
         const savedOrder = await newOrder.save();
+        console.log(savedOrder)
+        console.log(newOrder)
         return res.status(200).json({
             message: 'Orden realizada.',
-            savedOrder
+            detail: newOrder
         })
 
         

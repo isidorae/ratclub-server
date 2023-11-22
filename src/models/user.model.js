@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-// const jwt = require('jsonwebtoken')
-// const SECRET = process.env.SECRET_JWT
 
 const userSchema = new mongoose.Schema(
     {
@@ -15,26 +13,6 @@ const userSchema = new mongoose.Schema(
         timestamps: true
     }
 )
-
-// userSchema.methods.generateJWT = () => {
-//     return jwt.sign(
-//         {userID: this._id},
-//         SECRET,
-//         { expiresIn: "1d"},
-//         (err, token) => {
-//             if (err) console.log(err)
-//             res.cookie('token', token)
-//             res.json({ message: 'token created'})
-//         }
-//     )
-// }
-
-// userSchema.methods.onSignUpGenerateJWT = function () {
-//     return {
-//         userID: this._id,
-//         token: this.generateJWT()
-//     }
-// }
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;

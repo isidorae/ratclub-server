@@ -12,13 +12,11 @@ const {
     updateUserEmail
 }
     = require('../controllers/user.controller')
-// const validateToken = require('../middlewares/validateToken')
 const auth = require ('../middlewares/validateToken')
 
 router.post('/register', createUser);
 router.post('/login', login);
 router.post('/logout', logout)
-// router.get('/profile', auth, profile)
 router.get('/', auth, getUsers);
 router.get('/:id', auth, getUser);
 router.put('/:id', auth, updateUser);
