@@ -14,11 +14,11 @@ const {
     = require('../controllers/user.controller')
 const auth = require ('../middlewares/validateToken')
 
-router.post('/register', createUser);
-router.post('/login', login);
-router.post('/logout', logout)
+router.post('/register', createUser); //*
+router.post('/login', login); //*
+router.post('/logout', auth, logout) //*
 router.get('/', auth, getUsers);
-router.get('/:id', auth, getUser);
+router.get('/:id', auth, getUser); // profile
 router.put('/:id', auth, updateUser);
 router.put('/pass/:id', auth, updateUserPassword);
 router.put('/email/:id', auth, updateUserEmail )
