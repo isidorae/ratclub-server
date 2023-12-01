@@ -12,12 +12,12 @@ const {
 
 
 router.get('/', getItems);
-router.get('/:id', getItem);
+router.get('/:id', getItem); // **
 // router.get('/web', getItemForWeb);
 router.post('/:id', addItem);
 router.put('/:id', editItem);
 router.delete('/:id', deleteItem);
 router.get('/featured/:count', getFeaturedItems);
-router.get('/collection/:category', itemsByCategory);
+router.get('/collection/:category', itemsByCategory); // **
 
 module.exports = router; 
