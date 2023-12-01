@@ -11,7 +11,7 @@ Creada y diseñada para conectar con app Rat-Club. Conectada a base de datos de 
 
 5. Ruta de Orders: crear orden de compra asociada a un ID de usuario, y traer data de ordenes hacia el frontend.
 
-5. Ruta de From: recibir data de formulario de contacto desde frontend para almacenarla en base de datos. 
+5. Ruta de Form: recibir data de formulario de contacto desde frontend para almacenarla en base de datos. 
 
 
 
